@@ -185,6 +185,12 @@ impl Guard {
         }
     }
 
+    /// Manifest sah terakhir yang tersimpan di cache, diverifikasi ulang saat dibaca.
+    /// Dipakai launcher untuk menampilkan katalog: hanya isi manifest bertanda tangan yang tampil.
+    pub fn cached_manifest(&self) -> Option<Manifest> {
+        self.load_cache(&mut Vec::new()).map(|(manifest, _, _)| manifest)
+    }
+
     fn load_cache(&self, warnings: &mut Vec<String>) -> Option<(Manifest, Vec<u8>, Vec<u8>)> {
         let body = fs::read(self.cache_dir.join(CACHE_FILE)).ok()?;
         let sig = fs::read(self.cache_dir.join(CACHE_SIG_FILE)).ok()?;

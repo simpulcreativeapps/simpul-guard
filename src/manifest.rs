@@ -15,6 +15,9 @@ pub struct Manifest {
 #[derive(Debug, Clone, Deserialize, PartialEq, Eq)]
 pub struct AppEntry {
     pub name: String,
+    /// Keterangan satu baris untuk katalog launcher (opsional).
+    #[serde(default)]
+    pub tagline: Option<String>,
     pub status: Status,
     #[serde(default)]
     pub notice: Option<Notice>,

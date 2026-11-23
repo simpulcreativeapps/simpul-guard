@@ -178,3 +178,21 @@ fn production_keys_verify_the_first_published_manifest() {
     let (tbody, tsig) = fx("green_update");
     assert!(verify_manifest(&tbody, &tsig, simpul_guard::TRUSTED_KEYS).is_err());
 }
+
+#[test]
+fn cached_manifest_is_only_returned_when_signature_holds() {
+    let dir = tempfile::tempdir().unwrap();
+    let g = guard(dir.path(), "0.1.0");
+    assert!(g.cached_manifest().is_none(), "belum pernah ada manifest");
+
+    g.check_with(vec![src("green_update")], at("2026-11-23T00:00:00Z"));
+    let m = g.cached_manifest().expect("manifest sah tersimpan");
+    assert!(m.apps.contains_key("sync"));
+    assert!(m.apps["sync"].tagline.is_none(), "tagline opsional");
+
+    // Cache yang diubah di disk tidak boleh menjadi katalog.
+    let path = dir.path().join("manifest.json");
+    let edited = std::fs::read_to_string(&path).unwrap().replace("0.2.0", "9.9.9");
+    std::fs::write(&path, edited).unwrap();
+    assert!(g.cached_manifest().is_none());
+}
