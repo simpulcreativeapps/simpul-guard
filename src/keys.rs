@@ -14,6 +14,8 @@ pub struct TrustedKey {
 }
 
 pub const TRUSTED_KEYS: &[TrustedKey] = &[
-    // TrustedKey { id: "…", public_key_b64: "…" }, // utama
-    // TrustedKey { id: "…", public_key_b64: "…" }, // cadangan
+    // utama (dipakai untuk menandatangani manifest sehari-hari)
+    TrustedKey { id: "f2559a7d4050782e", public_key_b64: "MwVg/bB4PvAdFRZXGU6tYBeDlyxVOQCebquisopk1pQ=" },
+    // cadangan (disimpan offline; hanya dipakai bila kunci utama bocor atau hilang)
+    TrustedKey { id: "dbe26ff02233cfbc", public_key_b64: "EvEXi9kYkOG2Rn9c0TItlp/12ernpJz4TC+kHbiaU2E=" },
 ];

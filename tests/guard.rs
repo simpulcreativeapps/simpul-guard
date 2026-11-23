@@ -167,3 +167,14 @@ fn download_url_allowlist() {
     assert!(!simpul_guard::is_allowed_download_url("https://github.com.evil.example/a.exe"));
     assert!(!simpul_guard::is_allowed_download_url("https://evil.example/a.exe"));
 }
+
+#[test]
+fn production_keys_verify_the_first_published_manifest() {
+    // Manifest pertama yang ditandatangani dengan kunci UTAMA produksi.
+    let (body, sig) = fx("production");
+    let m = verify_manifest(&body, &sig, simpul_guard::TRUSTED_KEYS).expect("kunci produksi harus memverifikasi manifest asli");
+    assert!(m.apps.contains_key("sync"));
+    // Kunci uji tidak boleh dipercaya oleh build produksi.
+    let (tbody, tsig) = fx("green_update");
+    assert!(verify_manifest(&tbody, &tsig, simpul_guard::TRUSTED_KEYS).is_err());
+}
