@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "issued_at": "2026-11-21T00:00:00Z",
+  "apps": {
+    "sync": {
+      "name": "Simpul Sync",
+      "status": "yellow",
+      "notice": {
+        "title": "Pemberitahuan",
+        "message": "Sedang ditinjau.",
+        "source_url": null
+      },
+      "release": {
+        "version": "0.2.0",
+        "url": "https://github.com/simpulcreativeapps/simpul-sync/releases/download/v0.2.0/SimpulSync-Setup-0.2.0-x64.exe",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "notes_url": null
+      }
+    },
+    "video": {
+      "name": "Simpul Video",
+      "status": "green",
+      "notice": null,
+      "release": null
+    }
+  }
+}

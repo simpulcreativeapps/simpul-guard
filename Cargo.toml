@@ -1,0 +1,25 @@
+[package]
+name = "simpul-guard"
+version = "0.1.0"
+edition = "2024"
+description = "Cek update dan status (hijau/kuning/merah) aplikasi Simpul Creative Apps dari manifest bertanda tangan."
+repository = "https://github.com/simpulcreativeapps/simpul-guard"
+
+[dependencies]
+base64 = "0.23.1"
+chrono = { version = "0.4.45", default-features = false, features = ["std", "clock", "serde"] }
+ed25519-dalek = "3.0.0"
+reqwest = { version = "0.13.5", default-features = false, features = ["blocking", "rustls"], optional = true }
+semver = "1.0.28"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+url = "2.5.9"
+
+[features]
+default = ["net"]
+# Ambil manifest & unduh update lewat HTTPS. Matikan bila aplikasi punya klien HTTP sendiri.
+net = ["dep:reqwest"]
+
+[dev-dependencies]
+tempfile = "3.27.0"

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "issued_at": "2026-11-22T00:00:00Z",
+  "apps": {
+    "sync": {
+      "name": "Simpul Sync",
+      "status": "red",
+      "notice": {
+        "title": "Simpul Sync dihentikan",
+        "message": "Pesan uji.",
+        "source_url": "https://github.com/simpulcreativeapps/simpul-sync",
+        "disable_at": "2026-11-25T00:00:00Z"
+      },
+      "release": null
+    },
+    "video": {
+      "name": "Simpul Video",
+      "status": "green",
+      "notice": null,
+      "release": null
+    }
+  }
+}
