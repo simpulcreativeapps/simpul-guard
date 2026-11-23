@@ -23,6 +23,12 @@ pub struct AppEntry {
     pub notice: Option<Notice>,
     #[serde(default)]
     pub release: Option<Release>,
+    /// Versi terendah aplikasi ini yang masih boleh dipakai. Di bawahnya, pembaruan wajib.
+    #[serde(default)]
+    pub min_version: Option<String>,
+    /// Versi launcher terendah yang boleh membuka atau memasang aplikasi ini.
+    #[serde(default)]
+    pub min_launcher: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, PartialEq, Eq)]
@@ -53,6 +59,12 @@ pub struct Release {
 }
 
 impl Manifest {
+    /// Versi launcher terendah yang disyaratkan aplikasi `app_id` (bila ada dan valid).
+    pub fn min_launcher_for(&self, app_id: &str) -> Option<semver::Version> {
+        let min = self.apps.get(app_id)?.min_launcher.as_deref()?;
+        semver::Version::parse(min).ok()
+    }
+
     /// Cek aturan yang tidak bisa diwakili oleh tipe data. Kembalikan daftar masalah (kosong = valid).
     pub fn problems(&self) -> Vec<String> {
         let mut errs = Vec::new();
@@ -79,6 +91,25 @@ impl Manifest {
                     if a.release.is_some() {
                         errs.push(format!("{id}: release harus null saat red"));
                     }
+                }
+            }
+            if let Some(min) = &a.min_launcher {
+                if semver::Version::parse(min).is_err() {
+                    errs.push(format!("{id}: min_launcher tidak valid"));
+                }
+            }
+            if let Some(min) = &a.min_version {
+                // Versi minimal hanya masuk akal bila ada rilis yang memenuhinya,
+                // supaya pengguna selalu punya jalan untuk memperbarui.
+                let min = semver::Version::parse(min);
+                let latest = a.release.as_ref().and_then(|r| semver::Version::parse(&r.version).ok());
+                match (min, latest) {
+                    (Err(_), _) => errs.push(format!("{id}: min_version tidak valid")),
+                    (Ok(_), None) => errs.push(format!("{id}: min_version butuh release")),
+                    (Ok(min), Some(latest)) if min > latest => {
+                        errs.push(format!("{id}: min_version melebihi versi rilis"));
+                    }
+                    _ => {}
                 }
             }
             if let Some(r) = &a.release {

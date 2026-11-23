@@ -84,6 +84,9 @@ pub struct UpdateInfo {
     pub url: String,
     pub sha256: String,
     pub notes_url: Option<String>,
+    /// `true` bila versi terpasang di bawah `min_version` manifest: pembaruan wajib,
+    /// aplikasi tidak boleh dipakai sebelum diperbarui.
+    pub mandatory: bool,
 }
 
 /// Hasil satu kali pengecekan.

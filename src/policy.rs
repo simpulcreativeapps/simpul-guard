@@ -52,11 +52,17 @@ pub fn evaluate(m: &Manifest, app_id: &str, current_version: &str, now: DateTime
         app.release.as_ref().and_then(|r| {
             let latest = semver::Version::parse(&r.version).ok()?;
             let current = semver::Version::parse(current_version).ok()?;
+            let mandatory = app
+                .min_version
+                .as_deref()
+                .and_then(|m| semver::Version::parse(m).ok())
+                .is_some_and(|min| current < min);
             (latest > current).then(|| UpdateInfo {
                 version: latest,
                 url: r.url.clone(),
                 sha256: r.sha256.clone(),
                 notes_url: r.notes_url.clone(),
+                mandatory,
             })
         })
     };
